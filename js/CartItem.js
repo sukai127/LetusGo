@@ -7,10 +7,10 @@ function CartItem(product,count){
 }
 CartItem.prototype.getPrice = function(){
     return this.product.price;
-}
-CartItem.prototype.getName = function(){
+};
+CartItem.prototype.getProductName = function(){
     return this.product.name;
-}
+};
 CartItem.prototype.getUnit = function(){
     return this.product.unit;
-}
+};

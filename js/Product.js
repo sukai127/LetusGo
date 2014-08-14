@@ -8,14 +8,26 @@ function Product(name,unit,catagory,price){
     this.price = price;
 }
 
+function getProductByName(name){
+    var products = loadAllProducts();
+    var result;
+    _.forEach(products,function(product){
+        _.forEach(product.items,function(item){
+            if(item.name === name){
+                result = item;
+            }
+        });
+    });
+    return result;
+};
 function loadAllProducts(){
     return [
             {
-               type : 'frocery',
+               type : 'grocery',
                items : [
                    new Product('apple','pound','grocery',2.50),
                    new Product('coca_cola','bottle','grocery',0.50),
-                   new Product('Instant noodles','bag','grocery',1.00)
+                   new Product('Instant_noodles','bag','grocery',1.00)
                ]
             },
             {
@@ -26,4 +38,4 @@ function loadAllProducts(){
                 ]
             }
     ];
-}
+};
