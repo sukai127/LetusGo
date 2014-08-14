@@ -1,11 +1,16 @@
 /**
  * Created by sukai on 14-8-14.
  */
-function Cart(){
-    this.cartItems = [];
-    this.len = 0;
-}
+function Cart(cart){
+    if(cart){
+        this.cartItems = cart.cartItems;
+        this.len = cart.len;
+    }else{
+        this.cartItems = [];
+        this.len = 0;
+    }
 
+}
 Cart.prototype.getCount = function(){
     return this.cartItems.len;
 };
