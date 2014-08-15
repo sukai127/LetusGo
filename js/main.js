@@ -11,11 +11,35 @@ $(document).ready(function(){
     $('#category_panel').on('click','.btn',function(){
         addProduct2Cart($(this)[0].id);
     });
+    $('#cart_panel .increase').on('click',function(){
 
+        countOperate($(this),'+');
+    });
+    $('#cart_panel .decrease').on('click',function(){
+        countOperate($(this),'-');
+    });
 });
 
+function countOperate(element,op){
+    var input = element.parent().find('.number');
+    var name = element.data('name');
+    eval('input.val(parseInt(input.val())'+op+'1)');
+    var cart = Util.getStorageItem('cart');
+    _.forEach(cart.cartItems,function(item){
+        if(item.product.name === name){
+            eval('item.count'+op+op);
+            eval('cart.len'+op+op);
+            item = new CartItem(item.product,item.count);
+            $('#'+name).text(item.getSubtotal());
+        }
+    });
+    cart = new Cart(cart);
+    $('#buy').text('Total : $' +cart.getTotalMoney()+", And Pay it Now >>>");
+    $('#cart').text('Cart(' + cart.getCount() + ')');
+    Util.add2Storage('cart',cart);
+}
+
 function addProduct2Cart(name){
-//    var cart = JSON.parse(localStorage.getItem('cart'));
     var cart = Util.getStorageItem('cart');
     var currentProduct = getProductByName(name);
     var cartitem = new CartItem(currentProduct,1);
@@ -27,7 +51,7 @@ function addProduct2Cart(name){
     }
     cart.len++;
     Util.add2Storage('cart',cart);
-    $('#cart').text('Cart('+cart.len+')');
+    $('#cart').text('Cart(' + cart.len + ')');
 }
 
 function updateCount(cart,currentCartitem){
@@ -74,14 +98,21 @@ function initCart(){
             var item = new CartItem(olditem.product,olditem.count);
             var text = "<div class='row text-center'><div class='col-md-2'>"+item.getProductName()+
                 "</div><div class='col-md-4'><div class='form-inline form-group'>"+
-                "<button class='btn btn-warning' id="+item.getProductName()+"_decrease><span class='glyphicon glyphicon-minus'></span></button>"+
-                "<input type='text' class='form-control' name='number' value='"+item.getCount()+"'><button id="+item.getProductName()+"_increase class='btn btn-success'>"+
-                "<span class='glyphicon glyphicon-plus'></span></button></div></div><div class='col-md-2'>"+item.getPrice().toFixed(2)+"</div>"+
-                "<div class='col-md-2'>$"+item.getSubtotal().toFixed(2)+"</div><div class='col-md-2'><a href='#'>"+
+                "<button class='btn btn-warning decrease' data-name="+item.getProductName()+
+                "><span class='glyphicon glyphicon-minus'></span></button>"+
+                "<input type='text' class='form-control number' name='number' value='"+item.getCount()+"'>" +
+                "<button data-name="+item.getProductName()+" class='btn btn-success increase'>"+
+                "<span class='glyphicon glyphicon-plus'></span></button></div></div><div class='col-md-2'>$"+
+                item.getPrice().toFixed(2)+"</div>"+
+                "<div class='col-md-2'>$<span id='"+item.getProductName()+"'>"+item.getSubtotal().toFixed(2)+"</span></div><div class='col-md-2'><a href='#'>"+
                 "<span class='glyphicon glyphicon-remove text-danger'></span></a></div></div>";
             $('#cart_panel').append(text);
         }
-        $('#buy').text('Total : $' +cart.getTotalMoney()+", And "+$('#buy').text());
+        $('#list').hide();
+        $('#buy').text('Total : $' +cart.getTotalMoney()+", And "+$('#buy').text()).show();
+    }else{
+        $('#buy').hide();
+        $('#list').show();
     }
 }
 

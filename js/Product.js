@@ -10,7 +10,7 @@ function Product(name,unit,category,price){
 
 function getProductByName(name){
     var products = loadAllProducts();
-    var result;
+    var result = null;
     _.forEach(products,function(product){
         _.forEach(product.items,function(item){
             if(item.name === name){

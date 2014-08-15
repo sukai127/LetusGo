@@ -12,7 +12,11 @@ function Cart(cart){
 
 }
 Cart.prototype.getCount = function(){
-    return this.cartItems.len;
+    var sum =0;
+    for(var i = 0; i < this.cartItems.length; i++){
+        sum += this.cartItems[i].count;
+    }
+    return sum;
 };
 
 Cart.prototype.getTotalMoney = function(){
