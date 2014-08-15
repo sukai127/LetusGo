@@ -4,10 +4,10 @@
 $(document).ready(function(){
 
     init();
-//    $('#buy').on('click',function(event){
-//        event.stopPropagation();
-//        initResult();
-//    });
+    $('.confirm').on('click',function(event){
+        event.stopPropagation();
+        localStorage.removeItem('cart');
+    });
     $('#category_panel').on('click','.btn',function(){
         addProduct2Cart($(this)[0].id);
     });
@@ -59,7 +59,6 @@ function initResult(){
             var text = "<h5 class='text-center'>"+item.getProductName()+", price : $"+item.getPrice()
                 +", num : "+item.getCount()+", subtotal : $"+item.getSubtotal()+"</h5>";
             $('#result').append(text);
-            localStorage.removeItem('cart');
         }
     }else{
         $('#myModal').modal();
@@ -74,13 +73,14 @@ function initCart(){
             var item = new CartItem(olditem.product,olditem.count);
             var text = "<div class='row text-center'><div class='col-md-2'>"+item.getProductName()+
                 "</div><div class='col-md-4'><div class='form-inline form-group'>"+
-                "<button class='btn btn-warning'><span class='glyphicon glyphicon-minus'></span></button>"+
-                "<input type='text' class='form-control' name='number' value='"+item.getCount()+"'><button class='btn btn-success'>"+
+                "<button class='btn btn-warning' id="+item.getProductName()+"_decrease><span class='glyphicon glyphicon-minus'></span></button>"+
+                "<input type='text' class='form-control' name='number' value='"+item.getCount()+"'><button id="+item.getProductName()+"_increase class='btn btn-success'>"+
                 "<span class='glyphicon glyphicon-plus'></span></button></div></div><div class='col-md-2'>"+item.getPrice().toFixed(2)+"</div>"+
                 "<div class='col-md-2'>$"+item.getSubtotal().toFixed(2)+"</div><div class='col-md-2'><a href='#'>"+
                 "<span class='glyphicon glyphicon-remove text-danger'></span></a></div></div>";
             $('#cart_panel').append(text);
         }
+        $('#buy').text('Total : $' +cart.getTotalMoney()+", And "+$('#buy').text());
     }
 }
 

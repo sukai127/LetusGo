@@ -1,10 +1,10 @@
 /**
  * Created by sukai on 14-8-14.
  */
-function Product(name,unit,catagory,price){
+function Product(name,unit,category,price){
     this.name = name;
     this.unit = unit;
-    this.catagory = catagory;
+    this.category = category;
     this.price = price;
 }
 

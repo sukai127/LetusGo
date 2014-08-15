@@ -18,7 +18,8 @@ Cart.prototype.getCount = function(){
 Cart.prototype.getTotalMoney = function(){
     var sum = 0;
     for(var i = 0; i < this.cartItems.length; i++){
-        sum += this.cartItems[i].count * this.cartItems[i].getPrice();
+        var item = new CartItem(this.cartItems[i].product,this.cartItems[i].count);
+        sum += item.getCount() * item.getPrice();
     }
     return sum;
 };
