@@ -6,7 +6,7 @@ $(document).ready(function(){
     init();
     $('.confirm').on('click',function(event){
         event.stopPropagation();
-        localStorage.removeItem('cart');
+        Util.removeStorageItem('cart');
     });
     $('#category_panel').on('click','.btn',function(){
         addProduct2Cart($(this)[0].id);
@@ -15,7 +15,8 @@ $(document).ready(function(){
 });
 
 function addProduct2Cart(name){
-    var cart = JSON.parse(localStorage.getItem('cart'));
+//    var cart = JSON.parse(localStorage.getItem('cart'));
+    var cart = Util.getStorageItem('cart');
     var currentProduct = getProductByName(name);
     var cartitem = new CartItem(currentProduct,1);
     if(cart){
@@ -25,7 +26,7 @@ function addProduct2Cart(name){
         cart.cartItems.push(cartitem);
     }
     cart.len++;
-    localStorage.setItem('cart',JSON.stringify(cart));
+    Util.add2Storage('cart',cart);
     $('#cart').text('Cart('+cart.len+')');
 }
 
@@ -50,7 +51,7 @@ function init(){
 }
 
 function initResult(){
-    var oldCart = JSON.parse(localStorage.getItem('cart'));
+    var oldCart = Util.getStorageItem('cart');
     if(oldCart){
         var cart = new Cart(oldCart);
         for(var i = 0; i < cart.cartItems.length; i++){
@@ -65,7 +66,7 @@ function initResult(){
     }
 }
 function initCart(){
-    var oldCart = JSON.parse(localStorage.getItem('cart'));
+    var oldCart = Util.getStorageItem('cart');
     if(oldCart){
         var cart = new Cart(oldCart);
         for(var i = 0; i < cart.cartItems.length; i++){
@@ -85,7 +86,7 @@ function initCart(){
 }
 
 function initCartNumber(){
-    var cart = JSON.parse(localStorage.getItem('cart'));
+    var cart = Util.getStorageItem('cart');
     if(cart){
         $('#cart').text('Cart(' + cart.len + ')');
     }else{
