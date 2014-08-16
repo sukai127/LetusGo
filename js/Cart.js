@@ -13,17 +13,17 @@ function Cart(cart){
 }
 Cart.prototype.getCount = function(){
     var sum =0;
-    for(var i = 0; i < this.cartItems.length; i++){
-        sum += this.cartItems[i].count;
-    }
+    _.forEach(this.cartItems,function(cartitem){
+        sum += cartitem.count;
+    });
     return sum;
 };
 
 Cart.prototype.getTotalMoney = function(){
     var sum = 0;
-    for(var i = 0; i < this.cartItems.length; i++){
-        var item = new CartItem(this.cartItems[i].product,this.cartItems[i].count);
+    _.forEach(this.cartItems,function(cartitem){
+        var item = new CartItem(cartitem.product,cartitem.count);
         sum += item.getCount() * item.getPrice();
-    }
+    });
     return sum;
 };

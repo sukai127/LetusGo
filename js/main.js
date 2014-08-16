@@ -11,15 +11,21 @@ $(document).ready(function(){
     $('#category_panel').on('click','.btn',function(){
         addProduct2Cart($(this)[0].id);
     });
-    $('#cart_panel .increase').on('click',function(){
-
+    $('.increase').on('click',function(){
         countOperate($(this),'+');
     });
-    $('#cart_panel .decrease').on('click',function(){
+    $('.decrease').on('click',function(){
         countOperate($(this),'-');
     });
+    $('.delete').on('click',function(){
+        deleteItem($(this));
+    });
+
 });
 
+function deleteItem(element){
+    console.log(element.closest('.item').remove());
+}
 function countOperate(element,op){
     var input = element.parent().find('.number');
     var name = element.data('name');
@@ -54,6 +60,7 @@ function addProduct2Cart(name){
     $('#cart').text('Cart(' + cart.len + ')');
 }
 
+
 function updateCount(cart,currentCartitem){
     var cartitem = null;
     _.forEach(cart.cartItems,function(item){
@@ -78,13 +85,12 @@ function initResult(){
     var oldCart = Util.getStorageItem('cart');
     if(oldCart){
         var cart = new Cart(oldCart);
-        for(var i = 0; i < cart.cartItems.length; i++){
-            var olditem = cart.cartItems[i];
+        _.forEach(cart.cartItems,function(olditem){
             var item = new CartItem(olditem.product,olditem.count);
             var text = "<h5 class='text-center'>"+item.getProductName()+", price : $"+item.getPrice()
                 +", num : "+item.getCount()+", subtotal : $"+item.getSubtotal()+"</h5>";
             $('#result').append(text);
-        }
+        });
     }else{
         $('#myModal').modal();
     }
@@ -93,10 +99,9 @@ function initCart(){
     var oldCart = Util.getStorageItem('cart');
     if(oldCart){
         var cart = new Cart(oldCart);
-        for(var i = 0; i < cart.cartItems.length; i++){
-            var olditem = cart.cartItems[i];
+        _.forEach(cart.cartItems,function(olditem){
             var item = new CartItem(olditem.product,olditem.count);
-            var text = "<div class='row text-center'><div class='col-md-2'>"+item.getProductName()+
+            var text = "<div class='row text-center item'><div class='col-md-2'>"+item.getProductName()+
                 "</div><div class='col-md-4'><div class='form-inline form-group'>"+
                 "<button class='btn btn-warning decrease' data-name="+item.getProductName()+
                 "><span class='glyphicon glyphicon-minus'></span></button>"+
@@ -105,11 +110,11 @@ function initCart(){
                 "<span class='glyphicon glyphicon-plus'></span></button></div></div><div class='col-md-2'>$"+
                 item.getPrice().toFixed(2)+"</div>"+
                 "<div class='col-md-2'>$<span id='"+item.getProductName()+"'>"+item.getSubtotal().toFixed(2)+"</span></div><div class='col-md-2'><a href='#'>"+
-                "<span class='glyphicon glyphicon-remove text-danger'></span></a></div></div>";
+                "<span class='glyphicon glyphicon-remove text-danger delete'></span></a></div></div>";
             $('#cart_panel').append(text);
-        }
+        });
         $('#list').hide();
-        $('#buy').text('Total : $' +cart.getTotalMoney()+", And "+$('#buy').text()).show();
+        $('#buy').text('Total : $' +cart.getTotalMoney()+", And Pay it Now >>>").show();
     }else{
         $('#buy').hide();
         $('#list').show();
@@ -128,20 +133,19 @@ function initCartNumber(){
 function initProductList(){
     var products = loadAllProducts();
     var addProduct = function(type,items){
-        for(var i = 0; i < items.length; i++){
-            var text ="<div class='row text-center form-group'><div class='col-xs-3 h4'>"+items[i].name+"</div>"+
-                "<div class='col-xs-3 h4'>$"+items[i].price.toFixed(2)+"/"+items[i].unit+"</div><div class='col-xs-6'>"+
-                "<a class='btn btn-warning' id='"+items[i].name+"'>Add to the Cart</a></div></div>";
+        _.forEach(items,function(item){
+            var text ="<div class='row text-center form-group'><div class='col-xs-4 h4'>"+item.name+"</div>"+
+                "<div class='col-xs-4 h4'>$"+item.price.toFixed(2)+"/"+item.unit+"</div><div class='col-xs-4'>"+
+                "<a class='btn btn-warning' id='"+item.name+"'>Add to the Cart</a></div></div>";
             $('#'+type+'_panel').append(text);
-        }
-
+        });
     };
-    for(var i = 0; i < products.length; i++){
-        var type = products[i].type;
+    _.forEach(products,function(product){
+        var type = product.type;
         var text ="<div class='panel panel-default'><div class='panel-heading'>"+
             "<h3>"+type+"</h3></div><div class='panel-body' id='"+type+"_panel'>"+
             "</div></div>";
         $('#category_panel').append(text);
-        addProduct(type,products[i].items);
-    }
+        addProduct(type,product.items);
+    });
 }
