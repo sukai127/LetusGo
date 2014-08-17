@@ -2,7 +2,7 @@
  * Created by sukai on 14-8-15.
  */
 var Util = Util || {};
-Util = {
+Util.storage = {
     getStorageItem : function (key){
        return JSON.parse(localStorage.getItem(key));
     },

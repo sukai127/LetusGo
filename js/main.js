@@ -3,7 +3,7 @@
  */
 
 function initCartNumber(){
-    var cart = Util.getStorageItem('cart');
+    var cart = Util.storage.getStorageItem('cart');
     if(cart){
         $('#cart').text('Cart(' + cart.len + ')');
     }else{
@@ -17,9 +17,9 @@ function loadAllProducts(){
         {
             type : 'grocery',
             items : [
+                new Product('Instant_noodles','bag','grocery',1.00),
                 new Product('apple','kg','grocery',2.50),
-                new Product('coca_cola','bottle','grocery',0.50),
-                new Product('Instant_noodles','bag','grocery',1.00)
+                new Product('coca_cola','bottle','grocery',0.50)
             ]
         },
         {

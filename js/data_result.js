@@ -6,12 +6,12 @@ $(document).ready(function(){
     initResult();
     $('.confirm').on('click',function(event){
         event.stopPropagation();
-        Util.removeStorageItem('cart');
+        Util.storage.removeStorageItem('cart');
     });
 });
 
 function initResult(){
-    var oldCart = Util.getStorageItem('cart');
+    var oldCart = Util.storage.getStorageItem('cart');
     if(oldCart){
         var cart = new Cart(oldCart);
         _.forEach(cart.cartItems,function(olditem){

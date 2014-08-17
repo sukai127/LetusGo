@@ -10,7 +10,7 @@ $(document).ready(function(){
 });
 
 function addProduct2Cart(name){
-    var cart = Util.getStorageItem('cart');
+    var cart = Util.storage.getStorageItem('cart');
     var currentProduct = getProductByName(name);
     var cartitem = new CartItem(currentProduct,1);
     if(cart){
@@ -20,17 +20,15 @@ function addProduct2Cart(name){
         cart.cartItems.push(cartitem);
     }
     cart.len++;
-    Util.add2Storage('cart',cart);
+    Util.storage.add2Storage('cart',cart);
     $('#cart').text('Cart(' + cart.len + ')');
 }
 
 
 function updateCount(cart,currentCartitem){
     var cartitem = null;
-    _.forEach(cart.cartItems,function(item){
-        if(item.product.name=== currentCartitem.getProductName()){
-            cartitem = item;
-        }
+    cartitem = _.find(cart.cartItems,function(item){
+        return item.name === currentCartitem.getProductName();
     });
     if(cartitem){
         cartitem.count++;
@@ -41,6 +39,7 @@ function updateCount(cart,currentCartitem){
 
 function initProductList(){
     var products = loadAllProducts();
+
     var addProduct = function(type,items){
         _.forEach(items,function(item){
             var text ="<div class='row text-center form-group'><div class='col-xs-4 h4'>"+item.name+"</div>"+
@@ -49,6 +48,7 @@ function initProductList(){
             $('#'+type+'_panel').append(text);
         });
     };
+
     _.forEach(products,function(product){
         var type = product.type;
         var text ="<div class='panel panel-default'><div class='panel-heading'>"+
