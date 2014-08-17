@@ -5,34 +5,58 @@ $(document).ready(function(){
     initCartNumber();
     initCart();
     $('.increase').on('click',function(){
-        countOperate($(this),'+');
+        //countOperate($(this),'+');
+        plus($(this));
     });
     $('.decrease').on('click',function(){
-        countOperate($(this),'-');
+        //countOperate($(this),'-');
+        minus($(this));
     });
     $('.delete').on('click',function(){
         deleteItem($(this));
     });
-
+    $('.number').on('change',function(){
+        console.log($(this)[0].value);
+    });
 });
 
+
 function deleteItem(element){
-    console.log(element.closest('.item').remove());
-}
-function countOperate(element,op){
     var input = element.parent().find('.number');
     var name = element.data('name');
-    eval('input.val(parseInt(input.val())'+op+'1)');
+    changeCount(input,name,0);
+    element.closest('.item').remove();
+}
+
+function minus(element){
+    var input = element.parent().find('.number');
+    input.val(parseInt(input.val())-1);
+    var name = element.data('name');
+    changeCount(input,name,parseInt(input.val()));
+}
+
+function plus(element){
+    var input = element.parent().find('.number');
+    input.val(parseInt(input.val())+1);
+    var name = element.data('name');
+    changeCount(input,name,parseInt(input.val()));
+}
+
+function changeCount(element,name,number){
+
     var cart = Util.storage.getStorageItem('cart');
     _.forEach(cart.cartItems,function(item){
         if(item.product.name === name){
-            eval('item.count'+op+op);
-            eval('cart.len'+op+op);
+            //eval('item.count'+op+op);
+            cart.len = cart.len - item.count + number;
+            item.count = number;
+            //eval('cart.len'+op+op);
             item = new CartItem(item.product,item.count);
             $('#'+name).text(item.getSubtotal());
         }
     });
     cart = new Cart(cart);
+    element.val(number);
     $('#buy').text('Total : $' +cart.getTotalMoney()+", And Pay it Now >>>");
     $('#cart').text('Cart(' + cart.getCount() + ')');
     Util.storage.add2Storage('cart',cart);
@@ -40,25 +64,29 @@ function countOperate(element,op){
 
 function initCart(){
 
-    var buildCartContent = function(item){
-        return "<div class='row text-center item'><div class='col-md-2'>"+item.getProductName()+
+    var buildCartContent = function(olditem){
+        var item = new CartItem(olditem.product,olditem.count);
+        if(item.count <= 0){
+            return ;
+        }
+        var text = "<div class='row text-center item'><div class='col-md-2'>"+item.getProductName()+
             "</div><div class='col-md-4'><div class='form-inline form-group'>"+
             "<button class='btn btn-warning decrease' data-name="+item.getProductName()+
             "><span class='glyphicon glyphicon-minus'></span></button>"+
-            "<input type='text' class='form-control number' name='number' value='"+item.getCount()+"'>" +
+            "<input type='number' class='form-control number' name='number' data-name"+item.getProductName()+" value='"+item.getCount()+"'>" +
             "<button data-name="+item.getProductName()+" class='btn btn-success increase'>"+
             "<span class='glyphicon glyphicon-plus'></span></button></div></div><div class='col-md-2'>$"+
             item.getPrice().toFixed(2)+"</div>"+
             "<div class='col-md-2'>$<span id='"+item.getProductName()+"'>"+item.getSubtotal().toFixed(2)+"</span></div><div class='col-md-2'><a href='#'>"+
-            "<span class='glyphicon glyphicon-remove text-danger delete'></span></a></div></div>";
+            "<span class='glyphicon glyphicon-remove text-danger delete' data-name='"+item.getProductName()+"'></span></a></div></div>";
+        $('#cart_panel').append(text);
     }
 
     var oldCart = Util.storage.getStorageItem('cart');
     if(oldCart){
         var cart = new Cart(oldCart);
         _.forEach(cart.cartItems,function(olditem){
-            var item = new CartItem(olditem.product,olditem.count);
-            $('#cart_panel').append(buildCartContent(item));
+            buildCartContent(olditem);
         });
         $('#list').hide();
         $('#buy').text('Total : $' +cart.getTotalMoney()+", And Pay it Now >>>").show();
