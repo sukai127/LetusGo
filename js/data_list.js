@@ -14,7 +14,7 @@ function addProduct2Cart(name){
     var insert2Cart = function(cart,currentCartitem){
         var cartitem = null;
         cartitem = _.find(cart.cartItems,function(item){
-            return item.name === currentCartitem.getProductName();
+            return item.product.name === currentCartitem.getProductName();
         });
         if(cartitem){
             cartitem.count++;

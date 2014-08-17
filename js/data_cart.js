@@ -4,22 +4,29 @@
 $(document).ready(function(){
     initCartNumber();
     initCart();
-    $('.increase').on('click',function(){
-        //countOperate($(this),'+');
+    $('.increase').on('click',function(event){
+        event.preventDefault();
         plus($(this));
     });
-    $('.decrease').on('click',function(){
-        //countOperate($(this),'-');
+    $('.decrease').on('click',function(event){
+        event.preventDefault();
         minus($(this));
     });
-    $('.delete').on('click',function(){
+    $('.delete').on('click',function(event){
+        event.preventDefault();
         deleteItem($(this));
     });
     $('.number').on('change',function(){
-        console.log($(this)[0].value);
+        updateItem($(this));
     });
 });
 
+function updateItem(element){
+    var number = element.val();
+    console.log(number);
+    var name = element.data('name');
+    changeCount(element,name,parseInt(number));
+}
 
 function deleteItem(element){
     var input = element.parent().find('.number');
@@ -47,10 +54,8 @@ function changeCount(element,name,number){
     var cart = Util.storage.getStorageItem('cart');
     _.forEach(cart.cartItems,function(item){
         if(item.product.name === name){
-            //eval('item.count'+op+op);
             cart.len = cart.len - item.count + number;
             item.count = number;
-            //eval('cart.len'+op+op);
             item = new CartItem(item.product,item.count);
             $('#'+name).text(item.getSubtotal());
         }
@@ -73,14 +78,14 @@ function initCart(){
             "</div><div class='col-md-4'><div class='form-inline form-group'>"+
             "<button class='btn btn-warning decrease' data-name="+item.getProductName()+
             "><span class='glyphicon glyphicon-minus'></span></button>"+
-            "<input type='number' class='form-control number' name='number' data-name"+item.getProductName()+" value='"+item.getCount()+"'>" +
+            "<input type='number' class='form-control number' name='number' data-name='"+item.getProductName()+"' value='"+item.getCount()+"'>" +
             "<button data-name="+item.getProductName()+" class='btn btn-success increase'>"+
             "<span class='glyphicon glyphicon-plus'></span></button></div></div><div class='col-md-2'>$"+
             item.getPrice().toFixed(2)+"</div>"+
             "<div class='col-md-2'>$<span id='"+item.getProductName()+"'>"+item.getSubtotal().toFixed(2)+"</span></div><div class='col-md-2'><a href='#'>"+
             "<span class='glyphicon glyphicon-remove text-danger delete' data-name='"+item.getProductName()+"'></span></a></div></div>";
         $('#cart_panel').append(text);
-    }
+    };
 
     var oldCart = Util.storage.getStorageItem('cart');
     if(oldCart){
