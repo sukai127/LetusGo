@@ -39,22 +39,12 @@ function addProduct2Cart(name){
 
 function initProductList(){
     var products = loadAllProducts();
-
-    var addProduct = function(type,items){
-        _.forEach(items,function(item){
-            var text ="<div class='row text-center form-group'><div class='col-xs-4 h4'>"+item.name+"</div>"+
-                "<div class='col-xs-4 h4'>$"+item.price.toFixed(2)+"/"+item.unit+"</div><div class='col-xs-4'>"+
-                "<a class='btn btn-warning' id='"+item.name+"'>Add to the Cart</a></div></div>";
-            $('#'+type+'_panel').append(text);
-        });
-    };
-
-    _.forEach(products,function(product){
-        var type = product.type;
-        var text ="<div class='panel panel-default'><div class='panel-heading'>"+
-            "<h3>"+type+"</h3></div><div class='panel-body' id='"+type+"_panel'>"+
-            "</div></div>";
-        $('#category_panel').append(text);
-        addProduct(type,product.items);
+    _.forEach(products,function(item){
+        var text ="<div class='row text-center form-group'><div class='col-xs-3 h4'>"+item.category+"</div>"+
+            "<div class='col-xs-3 h4'>"+item.name+"</div>"+
+            "<div class='col-xs-3 h4'>$"+item.price.toFixed(2)+"/"+item.unit+"</div><div class='col-xs-3'>"+
+            "<a class='btn btn-warning' id='"+item.name+"'>Add to the Cart</a></div></div>";
+        $('#list').append(text);
     });
+
 }

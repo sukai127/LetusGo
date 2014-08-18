@@ -30,7 +30,6 @@ function changeCount(name,number){
         }
     });
     cart = new Cart(cart);
-    //element.val(number);
     $('#buy').text('Total : $' +cart.getTotalMoney()+", And Pay it Now >>>");
     $('#cart').text('Cart(' + cart.getCount() + ')');
     Util.storage.add2Storage('cart',cart);
