@@ -12,11 +12,9 @@ function getProductByName(name){
     var products = loadAllProducts();
     var result = null;
     _.forEach(products,function(product){
-        _.forEach(product.items,function(item){
-            if(item.name === name){
-                result = item;
-            }
-        });
+        if(product.name === name) {
+            result = product;
+        }
     });
     return result;
-};
+}

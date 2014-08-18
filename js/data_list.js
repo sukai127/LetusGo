@@ -4,7 +4,7 @@
 $(document).ready(function(){
     initCartNumber();
     initProductList();
-    $('#category_panel').on('click','.btn',function(){
+    $('#list').on('click','.btn',function(){
         addProduct2Cart($(this)[0].id);
     });
 });
@@ -12,6 +12,7 @@ $(document).ready(function(){
 function addProduct2Cart(name){
 
     var insert2Cart = function(cart,currentCartitem){
+        console.log(currentCartitem);
         var cartitem = null;
         cartitem = _.find(cart.cartItems,function(item){
             return item.product.name === currentCartitem.getProductName();
